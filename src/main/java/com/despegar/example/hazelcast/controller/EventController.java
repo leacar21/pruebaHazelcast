@@ -11,7 +11,7 @@ import com.despegar.example.hazelcast.dto.EventDTO;
 import com.despegar.example.hazelcast.service.internal.EventService;
 
 @RestController()
-@RequestMapping("/aftersale/hazelcast/event")
+@RequestMapping("/aftersale/rubick2/hazelcast/event")
 public class EventController {
 	
 	@Autowired

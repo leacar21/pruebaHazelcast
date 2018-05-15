@@ -10,7 +10,7 @@ import com.despegar.example.hazelcast.dto.SubTeamDTO;
 import com.despegar.example.hazelcast.service.internal.SubTeamService;
 
 @RestController()
-@RequestMapping("/aftersale/hazelcast/subteam")
+@RequestMapping("/aftersale/rubick2/hazelcast/subteam")
 public class SubTeamController {
 	
 	@Autowired

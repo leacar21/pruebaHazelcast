@@ -12,7 +12,7 @@ import com.despegar.example.hazelcast.dto.UserDTO;
 import com.despegar.example.hazelcast.service.internal.UserService;
 
 @RestController()
-@RequestMapping("/aftersale/hazelcast/user")
+@RequestMapping("/aftersale/rubick2/hazelcast/user")
 public class UserController {
 	
 	@Autowired
