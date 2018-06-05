@@ -11,120 +11,130 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.company.example.hazelcast.constants.Constants;
+import com.company.example.hazelcast.context.scan.config.hazelcast.listeners.EventListener;
 import com.company.example.hazelcast.context.scan.config.hazelcast.storage.EventsMapStore;
-import com.company.example.hazelcast.context.scan.config.hazelcast.storage.EventsQueueStore;
-import com.company.example.hazelcast.context.scan.config.hazelcast.storage.SubTeamMapStore;
-import com.company.example.hazelcast.context.scan.config.hazelcast.util.HazelcastUtil;
-import com.company.example.hazelcast.repository.model.SubTeam;
-import com.company.example.hazelcast.repository.model.TaskEventsToProcess;
 import com.hazelcast.config.Config;
+import com.hazelcast.config.EntryListenerConfig;
+import com.hazelcast.config.EvictionPolicy;
+import com.hazelcast.config.InMemoryFormat;
 import com.hazelcast.config.JoinConfig;
+import com.hazelcast.config.MapConfig;
+import com.hazelcast.config.MapStoreConfig;
+import com.hazelcast.config.MaxSizeConfig;
 import com.hazelcast.config.NetworkConfig;
+import com.hazelcast.config.MapStoreConfig.InitialLoadMode;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.core.MapStore;
 
 @Configuration
 public class HazelcastConfig {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(HazelcastConfig.class);
-	
-    private int port = 6701;
-    private String heartbeatInterval = "3";
-    private String heartbeatSeconds = "30";
-    private String firstRunDelay = "15";
-    private String nextRunDelay = "10";
-    private String hazelcastInterface = "10.59.32.20";
-    private String hazelcastJmx = "false";
-    
-    //---------------------------
-    private int backupCount = 1;
-    private boolean statisticsEnabled = true;
-    private int mapStoreDelay = 0;
-    //---------------------------
 
-    @Autowired
-    private HazelcastUtil hazelcastUtil;
-    
-    @Autowired
-    private EventsQueueStore eventsQueueStore;
-    
-    @Autowired
-    private EventsMapStore eventsMapStore;
-    
-    @Autowired
-    private SubTeamMapStore subTeamMapStore;
-    
-    
-    @Bean(destroyMethod = "shutdown")
-    public HazelcastInstance getHazelcast() {
+	private int port = 6701;
+	private String heartbeatInterval = "3";
+	private String heartbeatSeconds = "30";
+	private String firstRunDelay = "15";
+	private String nextRunDelay = "10";
+	private String hazelcastInterface = "10.59.24.45";
+	private String hazelcastJmx = "false";
 
-        List<String> joinTcpIpMembers;
-        String publicAddress = null;
-        //joinTcpIpMembers = Arrays.asList("10.59.25.122", "10.59.25.75");
-        joinTcpIpMembers = Arrays.asList("10.59.32.20");
+	// ---------------------------
+	private int backupCount = 1;
+	private boolean statisticsEnabled = true;
+	private int mapStoreDelay = 0;
+	// ---------------------------
 
-        // Configure Hazelcast Properties
-        Config config = new Config();
-        config.setProperty("hazelcast.heartbeat.interval.seconds", this.heartbeatInterval);
-        config.setProperty("hazelcast.max.no.heartbeat.seconds", this.heartbeatSeconds);
-        config.setProperty("hazelcast.merge.first.run.delay.seconds", this.firstRunDelay);
-        config.setProperty("hazelcast.merge.next.run.delay.seconds", this.nextRunDelay);
-        config.setProperty("hazelcast.logging.type", "slf4j");
-        config.setProperty("hazelcast.jmx", this.hazelcastJmx);
-        config.setProperty("hazelcast.jmx.detailed", this.hazelcastJmx);
-        
-        // Configure Hazelcast Network
 
-        NetworkConfig network = config.getNetworkConfig();
-        network.setPort(this.port).setPortAutoIncrement(true);
-        if (publicAddress != null) {
-            network.setPublicAddress(publicAddress);
-        }
+	@Autowired
+	private EventsMapStore eventsMapStore;
 
-        network.getInterfaces().addInterface(this.hazelcastInterface).setEnabled(true);
+	@Bean(destroyMethod = "shutdown")
+	public HazelcastInstance getHazelcast() {
 
-        JoinConfig join = network.getJoin();
+		List<String> joinTcpIpMembers;
+		String publicAddress = null;
+		joinTcpIpMembers = Arrays.asList("10.59.24.45", "10.59.24.16");
+		// joinTcpIpMembers = Arrays.asList("localhost");
 
-        join.getMulticastConfig().setEnabled(false);
-        join.getTcpIpConfig().setRequiredMember(null).setMembers(joinTcpIpMembers).setEnabled(true);
+		// Configure Hazelcast Properties
+		Config config = new Config();
+		config.setProperty("hazelcast.heartbeat.interval.seconds", this.heartbeatInterval);
+		config.setProperty("hazelcast.max.no.heartbeat.seconds", this.heartbeatSeconds);
+		config.setProperty("hazelcast.merge.first.run.delay.seconds", this.firstRunDelay);
+		config.setProperty("hazelcast.merge.next.run.delay.seconds", this.nextRunDelay);
+		config.setProperty("hazelcast.logging.type", "slf4j");
+		config.setProperty("hazelcast.jmx", this.hazelcastJmx);
+		config.setProperty("hazelcast.jmx.detailed", this.hazelcastJmx);
 
-        //=================
-        LOGGER.info("Creando configuración colas y mapas...");
-        hazelcastUtil.mapConfigurationSubTeams(config, backupCount, statisticsEnabled, mapStoreDelay, subTeamMapStore);
-        hazelcastUtil.queueConfiguration(config, eventsQueueStore);
-        hazelcastUtil.mapConfiguration(config, backupCount, statisticsEnabled, mapStoreDelay, eventsMapStore);
-        //for (Integer i = 0; i < Constants.COUNT_SUB_TEAMS; i++) {
-        		//Long idSubTeam = i.longValue();
-        		//EventsMapStore eventsMapStore = new EventsMapStore(idSubTeam, taskDAO, eventDAO, subTeamEventDAO);
-			//hazelcastUtil.mapConfiguration(config, Constants.SUB_TEAM_PREFIX + i, backupCount, statisticsEnabled, mapStoreDelay, eventsMapStore);
-		//}
-        //=================
-        
-        
-        HazelcastInstance newHazelcastInstance = Hazelcast.newHazelcastInstance(config);
-        
-        
-     // Esto es para que carge todos los mapas al arrancar la app (y no esperar a que pase un job para que se cargue)
-//	    for (int i=0; i < Constants.COUNT_SUB_TEAMS; i++) {
-	    		Map<Long, TaskEventsToProcess> eventMap = newHazelcastInstance.getMap(Constants.EVENTS_MAP);
-	    		if (eventMap.isEmpty()) { // esto
-	    			System.out.println(">>>>>> Mapa Vacio");
-	    		} else {
-	    			System.out.println(">>>>>> Mapa Lleno");
-	    		}
-//		}
-        
-	    	// Cargamos algunos subteams
-    		for (long i = 0; i < Constants.COUNT_SUB_TEAMS; i++) {
-    			Map<Long, SubTeam> subteamMap = newHazelcastInstance.getMap(Constants.SUBTEAMS_MAP);
-    			SubTeam subTeam = new SubTeam();
-    			subTeam.setId(i);
-    			subTeam.setCode("ST" + i);
-    			subteamMap.put(i, subTeam);
-		}	
-	    		
+		// Configure Hazelcast Network
+
+		NetworkConfig network = config.getNetworkConfig();
+		network.setPort(this.port).setPortAutoIncrement(true);
+		if (publicAddress != null) {
+			network.setPublicAddress(publicAddress);
+		}
+
+		network.getInterfaces().addInterface(this.hazelcastInterface).setEnabled(true);
+
+		JoinConfig join = network.getJoin();
+
+		join.getMulticastConfig().setEnabled(false);
+		join.getTcpIpConfig().setRequiredMember(null).setMembers(joinTcpIpMembers).setEnabled(true);
+
+		LOGGER.info("Create Map Configuration...");
+		this.mapConfiguration(config, backupCount, statisticsEnabled, mapStoreDelay, eventsMapStore);
+
+		HazelcastInstance newHazelcastInstance = Hazelcast.newHazelcastInstance(config);
 		return newHazelcastInstance;
-    }
-    
-    //-----------------------------
+	}
+
+	// -----------------------------
+	// -----------------------------
+
+	public void mapConfiguration(Config config, int backupCount, boolean statisticsEnabled, int mapStoreDelay, MapStore implementationMapStore) {
+		MapConfig mapConfiEvents = mapConfigurationAux(config, Constants.EVENTS_MAP, backupCount, statisticsEnabled, mapStoreDelay, implementationMapStore);
+		this.addEvictionConfiguration(mapConfiEvents);
+		this.addEventListener(mapConfiEvents);
+	}
+
+	// -----------------------------
+
+	private MapConfig mapConfigurationAux(Config config, String name, int backupCount, boolean statisticsEnabled, int mapStoreDelay, MapStore implementationMapStore) {
+		MapConfig mapConfig = config.getMapConfig(name);
+		mapConfig.setBackupCount(backupCount);
+		mapConfig.setInMemoryFormat(InMemoryFormat.OBJECT);
+		mapConfig.setStatisticsEnabled(statisticsEnabled);
+
+		if (implementationMapStore != null) {
+			MapStoreConfig mapStoreConfig = new MapStoreConfig();
+			mapStoreConfig.setEnabled(true);
+			mapStoreConfig.setImplementation(implementationMapStore);
+			mapStoreConfig.setWriteDelaySeconds(mapStoreDelay);
+			mapStoreConfig.setWriteBatchSize(100);
+			mapStoreConfig.setInitialLoadMode(InitialLoadMode.LAZY);
+			mapConfig.setMapStoreConfig(mapStoreConfig);
+		}
+		return mapConfig;
+	}
+
+	// -----------------------------
+
+	private void addEventListener(MapConfig mapConfig) {
+		EntryListenerConfig listenerConfig = new EntryListenerConfig();
+		listenerConfig.setImplementation(new EventListener());
+		mapConfig.addEntryListenerConfig(listenerConfig);
+	}
+
+	// -----------------------------
+
+	private void addEvictionConfiguration(MapConfig mapConfig) {
+		mapConfig.setEvictionPolicy(EvictionPolicy.LRU);
+		MaxSizeConfig sizeConfig = new MaxSizeConfig(997, MaxSizeConfig.MaxSizePolicy.PER_NODE);
+		mapConfig.setMaxSizeConfig(sizeConfig);
+		mapConfig.setMaxIdleSeconds(3600);
+	}
+
+	// -----------------------------
 }

@@ -1,5 +1,10 @@
 package com.company.example.hazelcast.controller;
 
+
+import java.util.Date;
+import java.util.Random;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -7,30 +12,39 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.company.example.hazelcast.dto.EventDTO;
-import com.company.example.hazelcast.service.internal.EventService;
+import com.company.example.hazelcast.repository.model.Event;
+import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.core.IMap;
 
 @RestController()
-@RequestMapping("/aftersale/rubick2/hazelcast/event")
+@RequestMapping("/example/hazelcast")
 public class EventController {
 	
 	@Autowired
-	private EventService eventService;
+    private HazelcastInstance hazelcastInstance;
 	
+
 	@PostMapping("")
-	public Long publishEvent(@RequestBody EventDTO eventDTO) {
-		try {
-			return eventService.publishEvent(eventDTO);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
+	public Long addElement(@RequestBody Event event) {
+		IMap<Long, Event> map = this.hazelcastInstance.getMap("EVENTS_MAP");
+		Long key = this.generateKey();
+		map.put(key, event);
+		return key;
 	}
 	
-	@GetMapping("/print")
-	public void printEvents() {
-		eventService.printEvents();
+	@GetMapping("/localKeys")
+    public Set<Long> getLocalKeys() {
+        IMap<Long, Event> map = this.hazelcastInstance.getMap("EVENTS_MAP");
+        Set<Long> localKeySet = map.localKeySet();
+        System.out.println("===========>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Local Keys Set: " + localKeySet);
+        return localKeySet;
+    }
+	
+	//-------
+	
+	private Long generateKey() {
+		Date date = new Date();
+		return date.getTime();
 	}
 	
 }

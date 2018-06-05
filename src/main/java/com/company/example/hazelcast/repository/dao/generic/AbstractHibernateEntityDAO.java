@@ -1,4 +1,4 @@
-package com.company.example.hazelcast.repository.dao;
+package com.company.example.hazelcast.repository.dao.generic;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;

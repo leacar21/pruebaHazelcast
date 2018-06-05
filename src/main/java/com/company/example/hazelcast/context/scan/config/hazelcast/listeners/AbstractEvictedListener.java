@@ -13,7 +13,8 @@ import com.hazelcast.map.listener.MapClearedListener;
 import com.hazelcast.map.listener.MapEvictedListener;
 
 public abstract class AbstractEvictedListener implements EntryAddedListener, EntryRemovedListener, EntryUpdatedListener, EntryEvictedListener, EntryExpiredListener, MapEvictedListener, MapClearedListener, HazelcastInstanceAware {
-    private HazelcastInstance instance;
+    
+	private HazelcastInstance instance;
 
     @Override
     public void setHazelcastInstance(HazelcastInstance hazelcastInstance) {
