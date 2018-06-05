@@ -5,23 +5,23 @@
 
 	<aop:config>
 		<aop:advisor
-			pointcut="com.despegar.example.hazelcast.repository.context.config.TransactionConfig.external()"
+			pointcut="com.company.example.hazelcast.repository.context.config.TransactionConfig.external()"
 			advice-ref="txNever" />
 
 		<aop:advisor
-			pointcut="com.despegar.example.hazelcast.repository.context.config.TransactionConfig.internal()"
+			pointcut="com.company.example.hazelcast.repository.context.config.TransactionConfig.internal()"
 			advice-ref="txNever" />
 
 		<aop:advisor
-			pointcut="com.despegar.example.hazelcast.repository.context.config.TransactionConfig.integration()"
+			pointcut="com.company.example.hazelcast.repository.context.config.TransactionConfig.integration()"
 			advice-ref="txNever" />
 
 		<aop:advisor
-			pointcut="com.despegar.example.hazelcast.repository.context.config.TransactionConfig.support()"
+			pointcut="com.company.example.hazelcast.repository.context.config.TransactionConfig.support()"
 			advice-ref="txNever" />
 
 		<aop:advisor
-			pointcut="com.despegar.example.hazelcast.repository.context.config.TransactionConfig.dao()"
+			pointcut="com.company.example.hazelcast.repository.context.config.TransactionConfig.dao()"
 			advice-ref="txNever" />
 	</aop:config>
 
