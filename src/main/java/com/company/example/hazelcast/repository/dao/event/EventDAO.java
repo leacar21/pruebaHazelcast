@@ -19,9 +19,6 @@ public class EventDAO {
 	@Autowired
 	private SessionFactory sessionFactory;
 
-	public EventDAO() {
-		
-	}
 	
 	public void deleteByKey(Long key) {
 		Session session = sessionFactory.getCurrentSession();
