@@ -10,13 +10,13 @@ import com.company.example.hazelcast.repository.model.base.AbstractEntity;
 @Table(name = "ZZ_EVENT")
 public class Event extends AbstractEntity {
 
-    @Column(name = "TYPE", nullable = false)
+    @Column(name = "EVENT_TYPE", nullable = false)
 	private String type;
 	
-    @Column(name = "CODE", nullable = false)
+    @Column(name = "EVENT_CODE", nullable = false)
 	private String code;
     
-    @Column(name = "KEY", nullable = false)
+    @Column(name = "EVENT_KEY", nullable = false)
 	private Long key;
 
     //------

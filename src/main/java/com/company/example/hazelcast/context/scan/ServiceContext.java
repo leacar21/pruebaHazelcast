@@ -6,6 +6,7 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -30,6 +31,7 @@ import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 @Configuration
 @EnableWebMvc
 @ComponentScan({"com.company.example.hazelcast"})
+@ComponentScans(value = { @ComponentScan("com.company.example.hazelcast.controller"), @ComponentScan("com.company.example.hazelcast.context.scan")})
 @PropertySource("classpath:/conf/repository_beta.properties")
 public class ServiceContext implements WebMvcConfigurer{
 

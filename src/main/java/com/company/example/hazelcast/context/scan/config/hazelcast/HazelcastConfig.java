@@ -2,7 +2,6 @@ package com.company.example.hazelcast.context.scan.config.hazelcast;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +36,7 @@ public class HazelcastConfig {
 	private String heartbeatSeconds = "30";
 	private String firstRunDelay = "15";
 	private String nextRunDelay = "10";
-	private String hazelcastInterface = "10.59.24.45";
+	private String hazelcastInterface = "10.59.24.178";
 	private String hazelcastJmx = "false";
 
 	// ---------------------------
@@ -55,7 +54,7 @@ public class HazelcastConfig {
 
 		List<String> joinTcpIpMembers;
 		String publicAddress = null;
-		joinTcpIpMembers = Arrays.asList("10.59.24.45", "10.59.24.16");
+		joinTcpIpMembers = Arrays.asList("10.59.24.178", "10.59.24.140");
 		// joinTcpIpMembers = Arrays.asList("localhost");
 
 		// Configure Hazelcast Properties

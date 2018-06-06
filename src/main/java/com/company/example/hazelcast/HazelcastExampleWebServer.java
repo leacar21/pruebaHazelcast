@@ -1,7 +1,6 @@
 package com.company.example.hazelcast;
 
 import java.util.TimeZone;
-
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -19,8 +18,6 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import org.springframework.web.servlet.DispatcherServlet;
 
 import com.company.example.hazelcast.context.scan.ServiceContext;
-
-
 
 public class HazelcastExampleWebServer {
 

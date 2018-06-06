@@ -2,49 +2,53 @@ package com.company.example.hazelcast.context.scan.config.hazelcast.storage;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.company.example.hazelcast.repository.dao.event.EventDAO;
 import com.company.example.hazelcast.repository.model.Event;
+import com.company.example.hazelcast.service.EventService;
 import com.hazelcast.core.MapStore;
 
 @Component
 public class EventsMapStore implements MapStore<Long, Event> {
 
-//	@Autowired
-//	private EventDAO eventDAO;
+	@Autowired
+	private EventService eventService;
 
 	// ----------------
 
 	public synchronized void delete(Long key) {
+		eventService.delete(key);
 	}
 
 	public synchronized void store(Long key, Event value) {
+		value.setKey(key);
+		eventService.save(key, value);
 	}
 
 	public synchronized void storeAll(Map<Long, Event> map) {
+		eventService.saveAll(map);
 	}
 
 	public synchronized void deleteAll(Collection<Long> keys) {
+		eventService.deleteAll(keys);
 	}
 
 	public synchronized Event load(Long key) {
-		return null;
+		return eventService.load(key);
 	}
 
 	public synchronized Map<Long, Event> loadAll(Collection<Long> keys) {
-		Map<Long, Event> result = new HashMap<Long, Event>();
-		return result;
+		return eventService.loadAll(keys);
 	}
 
 	public Iterable<Long> loadAllKeys() {
-		List<Long> list = new LinkedList<Long>();
-		return list;
+		 return eventService.loadAllKeys();
 	}
 
 	// public synchronized void delete(Long key) {
