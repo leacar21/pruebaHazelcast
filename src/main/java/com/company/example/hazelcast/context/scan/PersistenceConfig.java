@@ -26,11 +26,12 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.company.example.hazelcast.repository.model.Event;
+import com.company.example.hazelcast.repository.model.EventToProcess;
 
 @Configuration
 @PropertySource("classpath:db.properties")
 @EnableTransactionManagement
-@ComponentScans(value = { @ComponentScan("com.company.example.hazelcast.repository.dao")})
+@ComponentScans(value = { @ComponentScan("com.company.example.hazelcast.repository.dao"), @ComponentScan("com.company.example.hazelcast.repository.model")})
 public class PersistenceConfig {
 
   @Autowired
@@ -60,7 +61,7 @@ public class PersistenceConfig {
     props.put(C3P0_MAX_STATEMENTS, env.getProperty("hibernate.c3p0.max_statements"));
 
     factoryBean.setHibernateProperties(props);
-    factoryBean.setAnnotatedClasses(Event.class);
+    factoryBean.setAnnotatedClasses(Event.class, EventToProcess.class);
     
     return factoryBean;
   }

@@ -1,6 +1,5 @@
 package com.company.example.hazelcast.repository.dao.event;
 
-
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -22,26 +21,23 @@ public class EventDAO {
 	
 	public void deleteByKey(Long key) {
 		Session session = sessionFactory.getCurrentSession();
-		EntityManager em = session.getEntityManagerFactory().createEntityManager();
-		Event event = this.getByKey(key, em);
+		Event event = this.getByKey(key, session);
 		session.delete(event);
 	}
 
 	public void save(Event value) {
-		sessionFactory.getCurrentSession().saveOrUpdate(value);
+		sessionFactory.getCurrentSession().save(value);
 	}
 
 	public Event findBykey(Long key) {
 		Session session = sessionFactory.getCurrentSession();
-		EntityManager em = session.getEntityManagerFactory().createEntityManager();
-		Event event = this.getByKey(key, em);
+		Event event = this.getByKey(key, session);
 		return event;
 	}
 
 	public List<Long> loadAllKeys() {
 		Session session = sessionFactory.getCurrentSession();
-		EntityManager em = session.getEntityManagerFactory().createEntityManager();
-		TypedQuery<Long> query = em.createQuery(
+		TypedQuery<Long> query = session.createQuery(
 		        "SELECT e.key FROM Event e",
 		        Long.class);
 		List<Long> listEvent = query.getResultList();
@@ -50,8 +46,8 @@ public class EventDAO {
 	
 	//--------
 	
-	private Event getByKey(Long key, EntityManager em) {
-		TypedQuery<Event> query = em.createQuery(
+	private Event getByKey(Long key, Session session) {
+		TypedQuery<Event> query = session.createQuery(
 		        "SELECT e FROM Event e WHERE e.key = '" + key + "'",
 		        Event.class);
 		List<Event> listEvent = query.getResultList();
@@ -60,5 +56,48 @@ public class EventDAO {
 		}
 		return null;
 	}
+	
+	//-----------------
+	
+//	public void deleteByKey(Long key) {
+//		Session session = sessionFactory.getCurrentSession();
+//		EntityManager em = session.getEntityManagerFactory().createEntityManager();
+//		Event event = this.getByKey(key, em);
+//		session.delete(event);
+//	}
+//
+//	public void save(Event value) {
+//		sessionFactory.getCurrentSession().saveOrUpdate(value);
+//	}
+//
+//	public Event findBykey(Long key) {
+//		Session session = sessionFactory.getCurrentSession();
+//		EntityManager em = session.getEntityManagerFactory().createEntityManager();
+//		Event event = this.getByKey(key, em);
+//		return event;
+//	}
+//
+//	public List<Long> loadAllKeys() {
+//		Session session = sessionFactory.getCurrentSession();
+//		EntityManager em = session.getEntityManagerFactory().createEntityManager();
+//		TypedQuery<Long> query = em.createQuery(
+//		        "SELECT e.key FROM Event e",
+//		        Long.class);
+//		List<Long> listEvent = query.getResultList();
+//		return listEvent;
+//	}
+//	
+//	//--------
+//	
+//	private Event getByKey(Long key, EntityManager em) {
+//		TypedQuery<Event> query = em.createQuery(
+//		        "SELECT e FROM Event e WHERE e.key = '" + key + "'",
+//		        Event.class);
+//		List<Event> listEvent = query.getResultList();
+//		if ((listEvent != null) && (listEvent.size() > 0)){
+//			return listEvent.get(0);
+//		}
+//		return null;
+//	}
 
 }

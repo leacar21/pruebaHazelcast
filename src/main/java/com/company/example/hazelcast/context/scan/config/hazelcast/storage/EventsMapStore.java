@@ -1,13 +1,10 @@
 package com.company.example.hazelcast.context.scan.config.hazelcast.storage;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.company.example.hazelcast.repository.model.Event;
@@ -17,36 +14,44 @@ import com.hazelcast.core.MapStore;
 @Component
 public class EventsMapStore implements MapStore<Long, Event> {
 
+	@Lazy(true)
 	@Autowired
 	private EventService eventService;
 
 	// ----------------
 
+	@Override
 	public synchronized void delete(Long key) {
 		eventService.delete(key);
 	}
 
+	@Override
 	public synchronized void store(Long key, Event value) {
 		value.setKey(key);
 		eventService.save(key, value);
 	}
 
+	@Override
 	public synchronized void storeAll(Map<Long, Event> map) {
 		eventService.saveAll(map);
 	}
 
+	@Override
 	public synchronized void deleteAll(Collection<Long> keys) {
 		eventService.deleteAll(keys);
 	}
 
+	@Override
 	public synchronized Event load(Long key) {
 		return eventService.load(key);
 	}
 
+	@Override
 	public synchronized Map<Long, Event> loadAll(Collection<Long> keys) {
 		return eventService.loadAll(keys);
 	}
 
+	@Override
 	public Iterable<Long> loadAllKeys() {
 		 return eventService.loadAllKeys();
 	}

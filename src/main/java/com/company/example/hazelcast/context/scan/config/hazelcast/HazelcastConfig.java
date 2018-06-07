@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 import com.company.example.hazelcast.constants.Constants;
 import com.company.example.hazelcast.context.scan.config.hazelcast.listeners.EventListener;
@@ -19,9 +20,9 @@ import com.hazelcast.config.InMemoryFormat;
 import com.hazelcast.config.JoinConfig;
 import com.hazelcast.config.MapConfig;
 import com.hazelcast.config.MapStoreConfig;
+import com.hazelcast.config.MapStoreConfig.InitialLoadMode;
 import com.hazelcast.config.MaxSizeConfig;
 import com.hazelcast.config.NetworkConfig;
-import com.hazelcast.config.MapStoreConfig.InitialLoadMode;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.MapStore;
@@ -36,7 +37,7 @@ public class HazelcastConfig {
 	private String heartbeatSeconds = "30";
 	private String firstRunDelay = "15";
 	private String nextRunDelay = "10";
-	private String hazelcastInterface = "10.59.24.178";
+	private String hazelcastInterface = "10.59.24.204";
 	private String hazelcastJmx = "false";
 
 	// ---------------------------
@@ -45,17 +46,15 @@ public class HazelcastConfig {
 	private int mapStoreDelay = 0;
 	// ---------------------------
 
-
 	@Autowired
 	private EventsMapStore eventsMapStore;
 
 	@Bean(destroyMethod = "shutdown")
 	public HazelcastInstance getHazelcast() {
-
 		List<String> joinTcpIpMembers;
 		String publicAddress = null;
-		joinTcpIpMembers = Arrays.asList("10.59.24.178", "10.59.24.140");
-		// joinTcpIpMembers = Arrays.asList("localhost");
+		//joinTcpIpMembers = Arrays.asList("10.59.24.204", "10.59.24.140");
+		joinTcpIpMembers = Arrays.asList("10.59.24.204");
 
 		// Configure Hazelcast Properties
 		Config config = new Config();

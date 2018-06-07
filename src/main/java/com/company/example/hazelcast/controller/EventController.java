@@ -2,7 +2,6 @@ package com.company.example.hazelcast.controller;
 
 
 import java.util.Date;
-import java.util.Random;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.company.example.hazelcast.constants.Constants;
 import com.company.example.hazelcast.repository.model.Event;
+import com.company.example.hazelcast.service.EventService;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
 
@@ -24,12 +24,22 @@ public class EventController {
 	@Autowired
     private HazelcastInstance hazelcastInstance;
 	
-
+	@Autowired
+	private EventService eventService;
+	
+//	@PostMapping("")
+//	public Long addEvent(@RequestBody Event event) {
+//		IMap<Long, Event> map = this.hazelcastInstance.getMap(Constants.EVENTS_MAP);
+//		Long key = this.generateKey();
+//		map.put(key, event);
+//		return key;
+//	}
+	
 	@PostMapping("")
-	public Long addElement(@RequestBody Event event) {
-		IMap<Long, Event> map = this.hazelcastInstance.getMap(Constants.EVENTS_MAP);
+	public Long addEventToProcess(@RequestBody Event event) {
 		Long key = this.generateKey();
-		map.put(key, event);
+		event.setKey(key);
+		eventService.addEventToProcess(event);
 		return key;
 	}
 	
