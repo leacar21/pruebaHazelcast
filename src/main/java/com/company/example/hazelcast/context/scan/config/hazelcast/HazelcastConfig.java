@@ -54,7 +54,7 @@ public class HazelcastConfig {
 		List<String> joinTcpIpMembers;
 		String publicAddress = null;
 		//joinTcpIpMembers = Arrays.asList("10.59.24.204", "10.59.24.140");
-		joinTcpIpMembers = Arrays.asList("10.59.24.204");
+		joinTcpIpMembers = Arrays.asList("10.59.24.204", "10.59.24.16");
 
 		// Configure Hazelcast Properties
 		Config config = new Config();
