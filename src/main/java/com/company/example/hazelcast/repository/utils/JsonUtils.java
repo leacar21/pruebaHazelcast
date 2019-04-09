@@ -2,10 +2,10 @@ package com.company.example.hazelcast.repository.utils;
 
 import java.io.Serializable;
 
-import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,7 +18,7 @@ public class JsonUtils
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonUtils.class);
 
-    @Resource
+    @Autowired
     private ObjectMapper objectMapperCamelCase;
 
     public String toJson(Object object) {

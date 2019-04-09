@@ -37,7 +37,8 @@ public class HazelcastConfig {
 	private String heartbeatSeconds = "30";
 	private String firstRunDelay = "15";
 	private String nextRunDelay = "10";
-	private String hazelcastInterface = "10.59.24.204";
+	// private String hazelcastInterface = "10.59.24.204";
+	private String hazelcastInterface = "127.0.0.1";
 	private String hazelcastJmx = "false";
 
 	// ---------------------------
@@ -54,7 +55,7 @@ public class HazelcastConfig {
 		List<String> joinTcpIpMembers;
 		String publicAddress = null;
 		//joinTcpIpMembers = Arrays.asList("10.59.24.204", "10.59.24.140");
-		joinTcpIpMembers = Arrays.asList("10.59.24.204", "10.59.24.16");
+		joinTcpIpMembers = Arrays.asList("127.0.0.1");
 
 		// Configure Hazelcast Properties
 		Config config = new Config();
